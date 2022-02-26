@@ -1,0 +1,27 @@
+{
+  "name": "yoriqulov-lms",
+  "version": "1.0.0",
+  "description": "LMS by Yoriqulov",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": [
+    "js",
+    "nodejs",
+    "lms"
+  ],
+  "author": "yoriqulov",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.1.3",
+    "bootstrap-icons": "^1.8.1",
+    "next": "^12.1.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}
