@@ -1,12 +1,31 @@
 import React, {useState} from 'react'
+import {toast} from 'react-toastify'
+import Spinner from '../components/Spinner'
+import axiosInstance from '../utils/axiosInstance'
 
 const Register = () => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const handleSubmit = event => {
+    const [loading, setLoading] = useState(false)
+    const handleSubmit = async event => {
         event.preventDefault()
-        console.table({name, email, password})
+        try {
+            setLoading(true)
+            const {data} = await axiosInstance.post(
+                '/register',
+                {name, email, password}
+            )
+            console.log(data)
+            toast.success('Registration successfully.')
+            setLoading(false)
+        } catch (e) {
+            const {response = {}} = e
+            const {data = {}} = response
+            const {message = 'Seems error occurred.'} = data
+            toast.error(message)
+            setLoading(false)
+        }
     }
     return (
         <>
@@ -24,7 +43,11 @@ const Register = () => {
                     <input required value={password}
                            onChange={({target:{value}}) => setPassword(value)}
                            className='col-8 mb-4 p-2' type="password" placeholder='Enter password'/>
-                    <button className='col-8 btn p-2 btn-outline-primary' type='submit'>Submit</button>
+                    <button className='col-8 btn p-2 btn-outline-primary'
+                            disabled={loading || !name || !email}
+                            type='submit'>
+                        {loading ? <Spinner/> : 'Submit'}
+                    </button>
                 </form>
             </div>
         </>

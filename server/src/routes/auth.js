@@ -3,6 +3,6 @@ const {Router} = require('express')
 
 const router = Router()
 
-router.route('/register').get(registerUser)
+router.route('/register').post(registerUser)
 
 module.exports = router
