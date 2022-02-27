@@ -4,7 +4,8 @@
   "description": "backend for lms",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
   },
   "keywords": [
     "js",
@@ -15,6 +16,12 @@
   "author": "yoriqulov",
   "license": "ISC",
   "devDependencies": {
+    "dotenv": "^16.0.0",
     "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "express": "^4.17.3",
+    "pg": "^8.7.3"
   }
 }
