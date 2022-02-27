@@ -13,7 +13,7 @@ const Register = () => {
         try {
             setLoading(true)
             const {data} = await axiosInstance.post(
-                '/register',
+                '/api/register',
                 {name, email, password}
             )
             console.log(data)

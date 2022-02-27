@@ -12,7 +12,7 @@ function MyComponent({Component, pageProps}) {
     }, [])
     return (
         <>
-            <ToastContainer position='top-center'/>
+            <ToastContainer position='top-center' theme='colored'/>
             <TopNav/>
             <Component {...pageProps}/>
         </>
