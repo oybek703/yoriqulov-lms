@@ -5,7 +5,7 @@ const TopNav = () => {
     const [activeLink, setActiveLink] = useState('')
     useEffect(() => {
         setActiveLink(window.location.pathname)
-    }, [])
+    }, [process.browser && window.location.pathname])
     return (
         <div className='px-1 my-2 border-4'>
             <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">

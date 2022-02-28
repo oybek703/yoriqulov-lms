@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {toast} from 'react-toastify'
 import Spinner from '../components/Spinner'
 import axiosInstance from '../utils/axiosInstance'
+import Link from 'next/link'
 
 const Register = () => {
     const [name, setName] = useState('')
@@ -16,7 +17,6 @@ const Register = () => {
                 '/api/register',
                 {name, email, password}
             )
-            console.log(data)
             toast.success('Registration successfully.')
             setLoading(false)
         } catch (e) {
@@ -35,19 +35,25 @@ const Register = () => {
             <div className='container pt-3'>
                 <form onSubmit={handleSubmit} className='row justify-content-center'>
                     <input required value={name}
-                           onChange={({target:{value}}) => setName(value)}
+                           onChange={({target: {value}}) => setName(value)}
                            className='col-8 mb-4 p-2' type="text" placeholder='Enter name'/>
                     <input required value={email}
-                           onChange={({target:{value}}) => setEmail(value)}
+                           onChange={({target: {value}}) => setEmail(value)}
                            className='col-8 mb-4 p-2' type="email" placeholder='Enter email'/>
                     <input required value={password}
-                           onChange={({target:{value}}) => setPassword(value)}
+                           onChange={({target: {value}}) => setPassword(value)}
                            className='col-8 mb-4 p-2' type="password" placeholder='Enter password'/>
                     <button className='col-8 btn p-2 btn-outline-primary'
-                            disabled={loading || !name || !email}
+                            disabled={loading || !name || !email || !password}
                             type='submit'>
                         {loading ? <Spinner/> : 'Submit'}
                     </button>
+                    <div className='text-center mt-4'>
+                            Already have account? &nbsp;
+                            <Link href='/login'>
+                                <a>Login</a>
+                            </Link>
+                    </div>
                 </form>
             </div>
         </>
