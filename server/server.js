@@ -6,16 +6,27 @@ const express = require('express')
 const {checkConnection} = require('./config')
 const errorHandler = require('./src/middlewares/errorHandler')
 const notFoundPage = require('./src/middlewares/notFound')
+const cookieParser = require('cookie-parser')
+const csrf = require('csurf')
 const app = express()
 const {readdirSync} = require('fs')
 
-app.use(express.json())
-app.use(cors())
+const csrfProtection = csrf({cookie: true, httpOnly: true})
 
-//routes
+app.use(express.json())
+app.use(cors({credentials: true, origin: true}))
+app.use(cookieParser(process.env.COOKIE_SECRET))
+
+// routes
 readdirSync('./src/routes').map(route => {
     app.use(`/api`, require(`./src/routes/${route}`))
 })
+
+app.use(csrfProtection)
+
+app.get('/api/csrfToken', ((req, res) => {
+    res.json({csrfToken: req.csrfToken()})
+}))
 
 app.use(notFoundPage)
 app.use(errorHandler)

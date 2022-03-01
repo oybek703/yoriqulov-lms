@@ -33,15 +33,29 @@ exports.loginUser = asyncMiddleware(async (req, res) => {
     const user = await User.findOne({where: {email}})
     if (!user) throw new ErrorResponse(404, 'Invalid credentials user does not exist.')
     const isValidPassword = await bcrypt.compare(password, user.password)
-    if(!isValidPassword) throw new ErrorResponse(400, 'Invalid credentials.')
+    if (!isValidPassword) throw new ErrorResponse(400, 'Invalid credentials.')
     const token = jwt.sign(
         {id: user.id},
         process.env.JWT_SECRET,
         {expiresIn: '7d'}
-        )
+    )
     user.password = undefined
     res.cookie('token', token, {
         httpOnly: true,
         // secure: true /* when used with https */
     }).json({success: true, user})
+})
+
+// @desc Logout user
+// @route /logout
+// access Private
+exports.logoutUser = asyncMiddleware(async (req, res) => {
+    res.clearCookie('token').json({success: true, message: 'Logout success.'})
+})
+
+// @desc Get current user
+// @route /currentUser
+// access Private
+exports.getCurrentUser = asyncMiddleware(async (req, res) => {
+    res.json({success: true, user: req.user})
 })

@@ -1,28 +1,35 @@
-import React, {useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import Spinner from '../components/Spinner'
 import Link from 'next/link'
 import axiosInstance from '../utils/axiosInstance'
 import {toast} from 'react-toastify'
+import {Context} from '../context'
+import {useRouter} from 'next/router'
+import {getErrorMessage} from '../utils'
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
+    const {state, dispatch} = useContext(Context)
+    const router = useRouter()
+    useEffect(() => {
+        if(state.user) router.push('/')
+    }, [state])
     const handleSubmit = async event => {
         event.preventDefault()
         try {
             setLoading(true)
-            const {data} = await axiosInstance.post(
+            const {data: {user}} = await axiosInstance.post(
                 '/api/login',
                 {email, password}
             )
-            console.log(data)
-            toast.success('Login successfully.')
+            dispatch({type: 'LOGIN', payload: user})
+            window.localStorage.setItem('user', JSON.stringify(user))
+            toast.success('Login successful.')
             setLoading(false)
         } catch (e) {
-            const {response = {}} = e
-            const {data = {}} = response
-            const {message = 'Seems error occurred.'} = data
+            const message = getErrorMessage(e)
             toast.error(message)
             setLoading(false)
         }

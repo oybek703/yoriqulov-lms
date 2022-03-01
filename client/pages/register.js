@@ -1,14 +1,22 @@
-import React, {useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {toast} from 'react-toastify'
 import Spinner from '../components/Spinner'
 import axiosInstance from '../utils/axiosInstance'
 import Link from 'next/link'
+import {getErrorMessage} from '../utils'
+import {useRouter} from 'next/router'
+import {Context} from '../context'
 
 const Register = () => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
+    const router = useRouter()
+    const {state} = useContext(Context)
+    useEffect(() => {
+        if (state.user) router.push('/')
+    }, [state])
     const handleSubmit = async event => {
         event.preventDefault()
         try {
@@ -17,12 +25,10 @@ const Register = () => {
                 '/api/register',
                 {name, email, password}
             )
-            toast.success('Registration successfully.')
+            toast.success('Registration successful.')
             setLoading(false)
         } catch (e) {
-            const {response = {}} = e
-            const {data = {}} = response
-            const {message = 'Seems error occurred.'} = data
+            const message = getErrorMessage(e)
             toast.error(message)
             setLoading(false)
         }
@@ -49,10 +55,10 @@ const Register = () => {
                         {loading ? <Spinner/> : 'Submit'}
                     </button>
                     <div className='text-center mt-4'>
-                            Already have account? &nbsp;
-                            <Link href='/login'>
-                                <a>Login</a>
-                            </Link>
+                        Already have account? &nbsp;
+                        <Link href='/login'>
+                            <a>Login</a>
+                        </Link>
                     </div>
                 </form>
             </div>
