@@ -3,6 +3,14 @@ const bcrypt = require('bcrypt')
 const User = require('../models/User')
 const ErrorResponse = require('../utils/errorResponse')
 const jwt = require('jsonwebtoken')
+const aws = require('aws-sdk')
+
+const ses = new aws.SES({
+    accessKeyId: process.env.AWS_ACCESS_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION,
+    apiVersion: process.env.AWS_API_VERSION
+})
 
 // @desc Register new user
 // @route /register
@@ -58,4 +66,37 @@ exports.logoutUser = asyncMiddleware(async (req, res) => {
 // access Private
 exports.getCurrentUser = asyncMiddleware(async (req, res) => {
     res.json({success: true, user: req.user})
+})
+
+
+// @desc Send email
+// @route /sendEmail
+// access Private
+exports.sendEmail = asyncMiddleware(async (req, res) => {
+    const sentEmail = await ses.sendEmail({
+        Source: process.env.EMAIL_FROM,
+        Destination: {
+            ToAddresses: ['hohoybek@gmail.com']
+        },
+        ReplyToAddresses: [process.env.EMAIL_FROM],
+        Message: {
+            Body: {
+                Html: {
+                    Charset: 'UTF-8',
+                    Data: `
+                        <html lang="en">
+                            <h1>Reset password link</h1>
+                            <p>Please use following list to reset your password.</p>
+                        </html>    
+                    `
+                }
+            },
+            Subject: {
+                Charset: 'UTF-8',
+                Data: 'Password reset link'
+            }
+        }
+    }).promise()
+    console.log(sentEmail)
+    res.json({ok: true})
 })
