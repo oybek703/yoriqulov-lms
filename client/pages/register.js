@@ -21,11 +21,12 @@ const Register = () => {
         event.preventDefault()
         try {
             setLoading(true)
-            const {data} = await axiosInstance.post(
+            await axiosInstance.post(
                 '/api/register',
                 {name, email, password}
             )
             toast.success('Registration successful.')
+            router.push('/login')
             setLoading(false)
         } catch (e) {
             const message = getErrorMessage(e)

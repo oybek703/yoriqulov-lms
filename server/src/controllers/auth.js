@@ -20,10 +20,10 @@ exports.registerUser = asyncMiddleware(async (req, res) => {
     if (user) throw new ErrorResponse(400, 'User with this email already exists.')
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
-    const newUser = await User.create({
+    await User.create({
         username: name, email, password: hashedPassword
     })
-    res.status(201).json({success: true, user: newUser})
+    res.status(201).json({success: true, message: 'Registration success.'})
 })
 
 // @desc Login user
@@ -62,10 +62,14 @@ exports.getCurrentUser = asyncMiddleware(async (req, res) => {
 })
 
 
-// @desc Send email
-// @route /sendEmail
-// access Private
-exports.sendEmail = asyncMiddleware(async (req, res) => {
+// @desc Forgot password
+// @route /forgotPassword
+// access Public
+exports.forgotPassword = asyncMiddleware(async (req, res) => {
+    const {email} = req.body
+    const user = await User.findOne({where: {email}})
+    if (!user) throw new ErrorResponse(404, `User does not exist`)
+    const shortCode = Math.random().toString(36).slice(-6).toUpperCase()
     const transporter = nodeMailer.createTransport({
         host: process.env.EMAIL_HOST,
         service: process.env.EMAIL_SERVICE,
@@ -76,14 +80,34 @@ exports.sendEmail = asyncMiddleware(async (req, res) => {
             pass: process.env.EMAIL_USER_PASSWORD
         }
     })
-    const data = await transporter.sendMail({
-        from : `Yoriqulov LMS ${process.env.EMAIL_USER}`,
-        to: 'hhoybek@gmail.com',
+    await transporter.sendMail({
+        from: `Yoriqulov LMS ${process.env.EMAIL_USER}`,
+        to: email,
         subject: 'Reset password',
-        text: `Please use this link to reset your password`,
         html: `<html lang="en">
-                    <a href="#">http://localhost?code=lkamcm938u8ycnr34*/c*2r*c/c3w4ru2h3h</a>
+                    <h1>Reset Password</h1>
+                    <p>Use following code to reset your password:</p>
+                    <h2 style="color: red">${shortCode}</h2>
+                    <i>yoriqulov-lms</i>
                </html>`
     })
-    res.json({ok: true})
+    await user.update({resetPasswordCode: shortCode})
+    res.json({success: true, message: 'Reset password code sent.'})
+})
+
+// @desc Reset password
+// @route /resetPassword
+// access Public
+exports.resetPassword = asyncMiddleware(async (req, res) => {
+    const {email, code, newPassword} = req.body
+    if(!newPassword) throw new ErrorResponse(400, 'Password is required.')
+    const user = await User.findOne({where: {email}})
+    if(!user) throw new ErrorResponse(404, 'User does not exist')
+    if(user.resetPasswordCode.toLowerCase() !== code.toLowerCase()) {
+        throw new ErrorResponse(400, 'Invalid code.')
+    }
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(newPassword, salt)
+    await user.update({password: hashedPassword, resetPasswordCode: ''})
+    res.json({success: true, message: 'Password reset success.'})
 })

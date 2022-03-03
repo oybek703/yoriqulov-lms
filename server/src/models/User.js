@@ -28,7 +28,11 @@ const User = sequelize.define('User', {
     },
     stripe_account_id: DataTypes.STRING,
     stripe_seller: DataTypes.STRING,
-    stripe_session: DataTypes.STRING
+    stripe_session: DataTypes.STRING,
+    resetPasswordCode: {
+        type: DataTypes.STRING,
+        defaultValue: ''
+    }
 }, {timestamps: false})
 
 User.sync().then(() => console.log('User table created.'))

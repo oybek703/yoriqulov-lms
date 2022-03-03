@@ -4,7 +4,8 @@ const {
     loginUser,
     logoutUser,
     getCurrentUser,
-    sendEmail
+    forgotPassword,
+    resetPassword
 } = require('../controllers/auth')
 const {Router} = require('express')
 
@@ -14,6 +15,7 @@ router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
 router.route('/logout').get(logoutUser)
 router.route('/currentUser').get(checkAuth, getCurrentUser)
-router.route('/sendEmail').get(sendEmail)
+router.route('/forgotPassword').post(forgotPassword)
+router.route('/resetPassword').post(resetPassword)
 
 module.exports = router
