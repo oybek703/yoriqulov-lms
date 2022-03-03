@@ -3,14 +3,7 @@ const bcrypt = require('bcrypt')
 const User = require('../models/User')
 const ErrorResponse = require('../utils/errorResponse')
 const jwt = require('jsonwebtoken')
-const aws = require('aws-sdk')
-
-const ses = new aws.SES({
-    accessKeyId: process.env.AWS_ACCESS_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION,
-    apiVersion: process.env.AWS_API_VERSION
-})
+const nodeMailer = require('nodemailer')
 
 // @desc Register new user
 // @route /register
@@ -73,30 +66,24 @@ exports.getCurrentUser = asyncMiddleware(async (req, res) => {
 // @route /sendEmail
 // access Private
 exports.sendEmail = asyncMiddleware(async (req, res) => {
-    const sentEmail = await ses.sendEmail({
-        Source: process.env.EMAIL_FROM,
-        Destination: {
-            ToAddresses: ['hohoybek@gmail.com']
-        },
-        ReplyToAddresses: [process.env.EMAIL_FROM],
-        Message: {
-            Body: {
-                Html: {
-                    Charset: 'UTF-8',
-                    Data: `
-                        <html lang="en">
-                            <h1>Reset password link</h1>
-                            <p>Please use following list to reset your password.</p>
-                        </html>    
-                    `
-                }
-            },
-            Subject: {
-                Charset: 'UTF-8',
-                Data: 'Password reset link'
-            }
+    const transporter = nodeMailer.createTransport({
+        host: process.env.EMAIL_HOST,
+        service: process.env.EMAIL_SERVICE,
+        port: process.env.EMAIL_PORT,
+        secure: true,
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_USER_PASSWORD
         }
-    }).promise()
-    console.log(sentEmail)
+    })
+    const data = await transporter.sendMail({
+        from : `Yoriqulov LMS ${process.env.EMAIL_USER}`,
+        to: 'hhoybek@gmail.com',
+        subject: 'Reset password',
+        text: `Please use this link to reset your password`,
+        html: `<html lang="en">
+                    <a href="#">http://localhost?code=lkamcm938u8ycnr34*/c*2r*c/c3w4ru2h3h</a>
+               </html>`
+    })
     res.json({ok: true})
 })
