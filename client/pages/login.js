@@ -14,7 +14,7 @@ const Login = () => {
     const {state, dispatch} = useContext(Context)
     const router = useRouter()
     useEffect(() => {
-        if(state.user) router.push('/')
+        if(state.user) router.push('/user')
     }, [state])
     const handleSubmit = async event => {
         event.preventDefault()

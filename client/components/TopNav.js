@@ -70,6 +70,37 @@ const TopNav = () => {
                         </Link>
                     </li>
                 </>}
+                {user && user.role && user.role.includes('Instructor') ? <>
+                    <li className="nav-item mx-2" role="presentation">
+                        <Link href='/instructor/createCourse'>
+                            <button className={`nav-link d-flex 
+                            ${activeLink === '/instructor/createCourse' ? 'active' : ''}`}
+                                    id="pills-home-tab"
+                                    data-bs-toggle="pill"
+                                    data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
+                                    aria-selected="true">
+                                <i className="bi bi-plus"/>
+                                &nbsp;
+                                Create Course
+                            </button>
+                        </Link>
+                    </li>
+                </> : <>
+                    <li className="nav-item mx-2" role="presentation">
+                        <Link href='/user/becomeInstructor'>
+                            <button className={`nav-link d-flex 
+                            ${activeLink === '/user/becomeInstructor' ? 'active' : ''}`}
+                                    id="pills-home-tab"
+                                    data-bs-toggle="pill"
+                                    data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
+                                    aria-selected="true">
+                                <i className="bi bi-people"/>
+                                &nbsp;
+                                Become Instructor
+                            </button>
+                        </Link>
+                    </li>
+                </>}
             </ul>
             {user && <div className="nav nav-pills mb-3">
                 <li className="nav-item dropdown btn-primary p-0 btn-sm text-white">
@@ -80,7 +111,7 @@ const TopNav = () => {
                         <i className="bi bi-person"/>
                     </a>
                     <ul className="dropdown-menu">
-                        <Link href='/dashboard'><a className="dropdown-item">Dashboard</a></Link>
+                        <Link href='/user'><a className="dropdown-item">Dashboard</a></Link>
                         <li><a className="dropdown-item" onClick={logout}>Logout</a></li>
                     </ul>
                 </li>
