@@ -9,7 +9,7 @@ const CreateCourse = () => {
                 <div className='card'>
                     <div className='bg-primary p-4 text-white'>
                         <div className='card-body'>
-                            <h1 className='text-center'>Create Course</h1>
+                            <h1 className='text-center'>Instructor</h1>
                         </div>
                     </div>
                 </div>

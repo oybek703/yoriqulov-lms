@@ -6,12 +6,13 @@ import {getErrorMessage} from '../../utils'
 import {toast} from 'react-toastify'
 
 const Callback = () => {
-    const {state: {user}} = useContext(Context)
+    const {state: {user}, dispatch} = useContext(Context)
     async function getAccountStatus() {
         try {
             const {data} = await axiosInstance.post('/api/getAccountStatus')
-            console.log(data)
-            // window.location.href = '/instructor'
+            window.localStorage.setItem('user', data)
+            dispatch({type: 'LOGIN'})
+            window.location.href = '/instructor'
         } catch (e) {
             const message = getErrorMessage(e)
             toast.error(message)

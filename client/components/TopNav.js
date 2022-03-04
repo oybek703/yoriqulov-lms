@@ -40,6 +40,7 @@ const TopNav = () => {
                         </button>
                     </Link>
                 </li>
+                {/*ROUTES FOR UNAUTHORIZED USERS*/}
                 {!user && <>
                     <li className="nav-item mx-2" role="presentation">
                         <Link href='/login'>
@@ -70,22 +71,41 @@ const TopNav = () => {
                         </Link>
                     </li>
                 </>}
-                {user && user.role && user.role.includes('Instructor') ? <>
-                    <li className="nav-item mx-2" role="presentation">
-                        <Link href='/instructor/createCourse'>
-                            <button className={`nav-link d-flex 
+                {/*ROUTES FOR AUTHORIZED USERS*/}
+                {user && user.role && user.role.includes('Instructor')
+                    // INSTRUCTOR ROUTES
+                    ? <>
+                        <li className="nav-item mx-2" role="presentation">
+                            <Link href='/instructor/createCourse'>
+                                <button className={`nav-link d-flex 
                             ${activeLink === '/instructor/createCourse' ? 'active' : ''}`}
-                                    id="pills-home-tab"
-                                    data-bs-toggle="pill"
-                                    data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
-                                    aria-selected="true">
-                                <i className="bi bi-plus"/>
-                                &nbsp;
-                                Create Course
-                            </button>
-                        </Link>
-                    </li>
-                </> : user && user.role && <>
+                                        id="pills-home-tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
+                                        aria-selected="true">
+                                    <i className="bi bi-check-square"/>
+                                    &nbsp;
+                                    Create Course
+                                </button>
+                            </Link>
+                        </li>
+                        <li className="nav-item mx-2" role="presentation">
+                            <Link href='/instructor'>
+                                <button className={`nav-link d-flex 
+                            ${activeLink === '/instructor' ? 'active' : ''}`}
+                                        id="pills-home-tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
+                                        aria-selected="true">
+                                    <i className="bi bi-people"/>
+                                    &nbsp;
+                                    Instructor
+                                </button>
+                            </Link>
+                        </li>
+                    </>
+                    // ROUTES FOR SIMPLE USERS
+                    : user && user.role && <>
                     <li className="nav-item mx-2" role="presentation">
                         <Link href='/user/becomeInstructor'>
                             <button className={`nav-link d-flex 
@@ -102,6 +122,7 @@ const TopNav = () => {
                     </li>
                 </>}
             </ul>
+            {/*DROPDOWN FOR AUTHORIZED USERS*/}
             {user && <div className="nav nav-pills mb-3">
                 <li className="nav-item dropdown btn-primary p-0 btn-sm text-white">
                     <a className="nav-link nav-pills dropdown-toggle text-white"
@@ -111,7 +132,12 @@ const TopNav = () => {
                         <i className="bi bi-person"/>
                     </a>
                     <ul className="dropdown-menu">
-                        <Link href='/user'><a className="dropdown-item">Dashboard</a></Link>
+                        <Link href='/user'>
+                            <a className={`dropdown-item 
+                            ${activeLink === '/user' && 'active'}`}>
+                                Dashboard
+                            </a>
+                        </Link>
                         <li><a className="dropdown-item" onClick={logout}>Logout</a></li>
                     </ul>
                 </li>
