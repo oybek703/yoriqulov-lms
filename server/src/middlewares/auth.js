@@ -5,7 +5,6 @@ const ErrorResponse = require('../utils/errorResponse')
 
 exports.checkAuth = asyncMiddleware(async (req, res, next) => {
     try {
-        console.log(req.cookies)
         const token = req.cookies['token']
         const {id} = await jwt.verify(token, process.env.JWT_SECRET)
         req.user = await User.findByPk(id, {attributes: {exclude: ['password']}})

@@ -85,7 +85,7 @@ const TopNav = () => {
                             </button>
                         </Link>
                     </li>
-                </> : <>
+                </> : user && user.role && <>
                     <li className="nav-item mx-2" role="presentation">
                         <Link href='/user/becomeInstructor'>
                             <button className={`nav-link d-flex 

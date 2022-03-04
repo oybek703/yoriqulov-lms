@@ -10,9 +10,9 @@ const BecomeInstructor = () => {
     async function becomeInstructor() {
         try {
             setLoading(true)
-            const {data} = await axiosInstance.post('/api/makeInstructor')
-            console.log(data)
-            window.location.href = data
+            const {data: {url}} = await axiosInstance.post('/api/makeInstructor')
+            window.location.href = url
+            setLoading(false)
         } catch (e) {
             const message = getErrorMessage(e)
             setLoading(false)

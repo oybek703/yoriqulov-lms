@@ -6,7 +6,7 @@ const ProtectedRoute = ({children}) => {
     const {state: {user}} = useContext(Context)
     const router = useRouter()
     useEffect(() => {
-        if(!user) router.push('/login')
+        if(!user) router.push(router.route)
     }, [user])
 
     return (
