@@ -76,9 +76,9 @@ const TopNav = () => {
                     // INSTRUCTOR ROUTES
                     ? <>
                         <li className="nav-item mx-2" role="presentation">
-                            <Link href='/instructor/createCourse'>
+                            <Link href='/instructor/course/create'>
                                 <button className={`nav-link d-flex 
-                            ${activeLink === '/instructor/createCourse' ? 'active' : ''}`}
+                            ${activeLink === '/instructor/course/create' ? 'active' : ''}`}
                                         id="pills-home-tab"
                                         data-bs-toggle="pill"
                                         data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"

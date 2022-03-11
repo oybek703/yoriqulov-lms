@@ -1,7 +1,6 @@
 import React, {useContext, useEffect} from 'react'
 import {Context} from '../context'
 import {useRouter} from 'next/router'
-import ProtectedRoute from './ProtectedRoute'
 
 const InstructorRoute = ({children}) => {
     const {state: {user}} = useContext(Context)
@@ -12,9 +11,9 @@ const InstructorRoute = ({children}) => {
     }, [user])
 
     return (
-        <ProtectedRoute>
+        <>
             {children}
-        </ProtectedRoute>
+        </>
     )
 }
 

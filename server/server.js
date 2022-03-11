@@ -13,7 +13,7 @@ const {readdirSync} = require('fs')
 
 const csrfProtection = csrf({cookie: true, httpOnly: true})
 
-app.use(express.json())
+app.use(express.json({limit: '10mb'}))
 app.use(cors({credentials: true, origin: true}))
 app.use(cookieParser(process.env.COOKIE_SECRET))
 

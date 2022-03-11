@@ -1,4 +1,7 @@
-const {makeInstructor, getAccountStatus} = require('../controllers/instructor')
+const {
+    makeInstructor,
+    getAccountStatus
+} = require('../controllers/instructor')
 const {checkAuth} = require('../middlewares/auth')
 const {Router} = require('express')
 

@@ -6,3 +6,4 @@ client/.env.local
 
 server/node_modules
 server/config/.env
+server/config/yoriqulov-lms-firebase-adminsdk-t0tlj-c981854e3d.json
