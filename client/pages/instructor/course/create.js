@@ -8,7 +8,6 @@ import {toast} from 'react-toastify'
 
 const CreateCourse = () => {
     const [loading, setLoading] = useState(false)
-    const [updateImageName, setUpdatedImageName] = useState('')
     const [upLoading, setUpLoading] = useState(false)
     const [file, setFile] = useState('')
     const [formValues, setFormValues] = useState({
@@ -18,9 +17,11 @@ const CreateCourse = () => {
         paid: false
     })
     const [preview, setPreview] = useState('')
+
     const handleSubmit = async e => {
         e.preventDefault()
         try {
+            if(!file) return toast.error('Image is required!')
             setLoading(true)
             if (file) await uploadImage(file)
             setLoading(false)
@@ -36,7 +37,6 @@ const CreateCourse = () => {
             [e.target.name]: e.target.value
         })
     }
-
     async function uploadImage(file) {
         FileResizer.imageFileResizer(
             file,
@@ -48,13 +48,11 @@ const CreateCourse = () => {
             async uri => {
                 try {
                     setUpLoading(true)
-                    const {data = {}} = await axiosInstance.post(
+                    await axiosInstance.post(
                         '/api/course/uploadImage',
-                        {image: uri, oldImage: updateImageName}
+                        {image: uri}
                     )
                     setUpLoading(false)
-                    const {message: {filename}} = data
-                    setUpdatedImageName(filename)
                 } catch (e) {
                     const message = getErrorMessage(e)
                     setUpLoading(false)
@@ -62,12 +60,12 @@ const CreateCourse = () => {
                 }
             })
     }
-
     const handleImageChange = async e => {
         const file = e.target.files[0]
         setFile(file)
         setPreview(window.URL.createObjectURL(e.target.files[0]))
     }
+
     return (
         <InstructorRoute>
             <div className='card mb-3'>

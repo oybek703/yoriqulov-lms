@@ -7,6 +7,5 @@ const {uploadImageAndGetDownloadUrl} = require('../utils/handleImageUploads')
 exports.uploadCourseImage = asyncMiddleware(async (req, res) => {
     const {image, oldImage} = req.body
     const response = await uploadImageAndGetDownloadUrl(image, oldImage)
-    console.log(response)
     res.json({success: true, message: response})
 })
