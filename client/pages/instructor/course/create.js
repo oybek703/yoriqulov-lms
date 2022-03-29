@@ -1,17 +1,19 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import InstructorRoute from '../../../components/InstructorRoute'
 import Spinner from '../../../components/Spinner'
 import axiosInstance from '../../../utils/axiosInstance'
-import FileResizer from 'react-image-file-resizer'
 import {getErrorMessage} from '../../../utils'
 import {toast} from 'react-toastify'
+import firebaseApp from '../../../utils/firebase'
+import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage'
+import {v4 as uuid} from 'uuid'
 
 const CreateCourse = () => {
+    const [uploadProgress, setUploadProgress] = useState(0)
     const [loading, setLoading] = useState(false)
     const [upLoading, setUpLoading] = useState(false)
     const [file, setFile] = useState('')
     const [imageDownloadUrl, setImageDownloadUrl] = useState('')
-    const [oldImage, setOldImage] = useState()
     const [formValues, setFormValues] = useState({
         name: '',
         description: '',
@@ -25,7 +27,7 @@ const CreateCourse = () => {
         try {
             if(!file) return toast.error('Image is required!')
             setLoading(true)
-            if (file) await uploadImage(file)
+            if (file) uploadImage(file)
             await axiosInstance.post('/api/course/create', {
                 ...formValues,
                 imageDownloadUrl
@@ -45,31 +47,33 @@ const CreateCourse = () => {
             [e.target.name]: e.target.value
         })
     }
-    async function uploadImage(file) {
-        FileResizer.imageFileResizer(
-            file,
-            720,
-            500,
-            'JPEG',
-            100,
-            0,
-            async uri => {
-                try {
-                    setUpLoading(true)
-                    const {data: {message = {}}} = await axiosInstance.post(
-                        '/api/course/uploadImage',
-                        {image: uri, oldImage}
-                    )
-                    const {downloadUrl, filename} = message
+    function uploadImage(file) {
+        const storage = getStorage(firebaseApp)
+        const storageRef = ref(storage, 'lms')
+        const uploadTask = uploadBytesResumable(storageRef, file)
+        setUpLoading(true)
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                // Observe state change events such as progress, pause, and resume
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                setUploadProgress(progress)
+            },
+            (error) => {
+                console.log(error)
+                setUpLoading(false)
+                toast.error(error.message)
+            },
+            () => {
+                // Handle successful uploads on complete
+                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    setImageDownloadUrl(downloadURL)
+                    setUploadProgress(0)
                     setUpLoading(false)
-                    setImageDownloadUrl(downloadUrl)
-                    setOldImage(filename)
-                } catch (e) {
-                    const message = getErrorMessage(e)
-                    setUpLoading(false)
-                    toast.error(message)
-                }
-            })
+                })
+            }
+        )
     }
     const handleImageChange = async e => {
         const file = e.target.files[0]
@@ -159,6 +163,14 @@ const CreateCourse = () => {
                                           }}/>
                     }
                 </div>
+                {upLoading && <>
+                    <div className="progress">
+                        <div className="progress-bar progress-bar-animated progress-bar-striped" role="progressbar"
+                             style={{width: `${uploadProgress}%`}} aria-valuenow={uploadProgress}
+                             aria-valuemin="0" aria-valuemax="100">{uploadProgress}%
+                        </div>
+                    </div>
+                    <br/></>}
                 <button
                     disabled={loading || upLoading}
                     className='btn btn-primary rounded-pill'>
