@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import InstructorRoute from '../../../components/InstructorRoute'
 import Spinner from '../../../components/Spinner'
 import axiosInstance from '../../../utils/axiosInstance'
@@ -10,6 +10,8 @@ const CreateCourse = () => {
     const [loading, setLoading] = useState(false)
     const [upLoading, setUpLoading] = useState(false)
     const [file, setFile] = useState('')
+    const [imageDownloadUrl, setImageDownloadUrl] = useState('')
+    const [oldImage, setOldImage] = useState()
     const [formValues, setFormValues] = useState({
         name: '',
         description: '',
@@ -24,6 +26,12 @@ const CreateCourse = () => {
             if(!file) return toast.error('Image is required!')
             setLoading(true)
             if (file) await uploadImage(file)
+            await axiosInstance.post('/api/course/create', {
+                ...formValues,
+                imageDownloadUrl
+            })
+            console.log(imageDownloadUrl)
+            setImageDownloadUrl('')
             setLoading(false)
         } catch (e) {
             const message = getErrorMessage(e)
@@ -48,11 +56,14 @@ const CreateCourse = () => {
             async uri => {
                 try {
                     setUpLoading(true)
-                    await axiosInstance.post(
+                    const {data: {message = {}}} = await axiosInstance.post(
                         '/api/course/uploadImage',
-                        {image: uri}
+                        {image: uri, oldImage}
                     )
+                    const {downloadUrl, filename} = message
                     setUpLoading(false)
+                    setImageDownloadUrl(downloadUrl)
+                    setOldImage(filename)
                 } catch (e) {
                     const message = getErrorMessage(e)
                     setUpLoading(false)

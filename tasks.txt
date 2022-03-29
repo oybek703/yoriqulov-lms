@@ -1,0 +1,6 @@
+1. Create course and lessons schema
+2. Write isInstructor middleware
+3. Save course in the database
+4. List instructor courses in dashboard
+5. Show single course view for instructor(navigate from course list)
+6. Display react-markdown in single course view page

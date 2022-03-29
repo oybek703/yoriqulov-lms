@@ -8,8 +8,9 @@ const errorHandler = require('./src/middlewares/errorHandler')
 const notFoundPage = require('./src/middlewares/notFound')
 const cookieParser = require('cookie-parser')
 const csrf = require('csurf')
-const app = express()
 const {readdirSync} = require('fs')
+
+const app = express()
 
 const csrfProtection = csrf({cookie: true, httpOnly: true})
 

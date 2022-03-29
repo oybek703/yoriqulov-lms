@@ -15,5 +15,4 @@ exports.checkAuth = asyncMiddleware(async (req, res, next) => {
         if(['JsonWebTokenError', 'TokenExpiredError'].indexOf(name) >= 0) return next(new ErrorResponse(440, 'Session expired.'))
         next(new ErrorResponse(500, 'Something went wrong on server side.'))
     }
-
 })

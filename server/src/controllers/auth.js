@@ -15,7 +15,7 @@ exports.registerUser = asyncMiddleware(async (req, res) => {
         !password ||
         password.length < 6 ||
         password.length > 20
-    ) throw new ErrorResponse(400, 'Password is required')
+    ) throw new ErrorResponse(400, 'Password should contain at least 6 characters.')
     const user = await User.findOne({where: {email}})
     if (user) throw new ErrorResponse(400, 'User with this email already exists.')
     const salt = await bcrypt.genSalt(10)
