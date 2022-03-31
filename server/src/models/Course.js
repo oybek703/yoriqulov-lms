@@ -57,8 +57,10 @@ const Course = sequelize.define('Course', {
         allowNull: false
     },
     price: {
-        type: DataTypes.NUMBER,
-        defaultValue: 9.99
+        type: DataTypes.FLOAT,
+        set(val) {
+            this.setDataValue('price', parseFloat(val))
+        }
     },
     image: {
         type: DataTypes.STRING
@@ -74,13 +76,16 @@ const Course = sequelize.define('Course', {
         type: DataTypes.BOOLEAN,
         defaultValue: true
     }
-})
+}, {timestamps: false})
 
-Course.belongsTo(User, {as: 'userId'})
-Course.hasMany(Lesson, {as: 'lessons'})
+User.hasMany(Course)
+Course.belongsTo(User)
 
-Lesson.sync().then(() => console.log('Lesson table created.'))
+Course.hasMany(Lesson)
+Lesson.belongsTo(Course)
+
 Course.sync().then(() => console.log('Course table created.'))
+Lesson.sync().then(() => console.log('Lesson table created.'))
 
 module.exports = {
     Course,

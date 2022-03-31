@@ -4,16 +4,18 @@ import Spinner from '../../../components/Spinner'
 import axiosInstance from '../../../utils/axiosInstance'
 import {getErrorMessage} from '../../../utils'
 import {toast} from 'react-toastify'
-import firebaseApp from '../../../utils/firebase'
+import firebaseConfig from '../../../utils/firebase'
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage'
 import {v4 as uuid} from 'uuid'
+import {initializeApp} from 'firebase/app'
+import {useRouter} from 'next/router'
 
 const CreateCourse = () => {
+    const router = useRouter()
     const [uploadProgress, setUploadProgress] = useState(0)
     const [loading, setLoading] = useState(false)
     const [upLoading, setUpLoading] = useState(false)
     const [file, setFile] = useState('')
-    const [imageDownloadUrl, setImageDownloadUrl] = useState('')
     const [formValues, setFormValues] = useState({
         name: '',
         description: '',
@@ -27,14 +29,17 @@ const CreateCourse = () => {
         try {
             if(!file) return toast.error('Image is required!')
             setLoading(true)
-            if (file) uploadImage(file)
+            let image
+            if (file) {
+                image = await uploadImage(file)
+            }
             await axiosInstance.post('/api/course/create', {
                 ...formValues,
-                imageDownloadUrl
+                price: formValues.paid ? formValues.price : 0,
+                image
             })
-            console.log(imageDownloadUrl)
-            setImageDownloadUrl('')
             setLoading(false)
+            await router.push('/user')
         } catch (e) {
             const message = getErrorMessage(e)
             toast.error(message)
@@ -47,33 +52,35 @@ const CreateCourse = () => {
             [e.target.name]: e.target.value
         })
     }
-    function uploadImage(file) {
+    async function uploadImage(file) {
+        const firebaseApp = initializeApp(firebaseConfig)
         const storage = getStorage(firebaseApp)
-        const storageRef = ref(storage, 'lms')
+        const storageRef = ref(storage, `${uuid()}_${file.name.toLowerCase()}`)
         const uploadTask = uploadBytesResumable(storageRef, file)
         setUpLoading(true)
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                // Observe state change events such as progress, pause, and resume
-                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-                setUploadProgress(progress)
-            },
-            (error) => {
-                console.log(error)
-                setUpLoading(false)
-                toast.error(error.message)
-            },
-            () => {
-                // Handle successful uploads on complete
-                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    setImageDownloadUrl(downloadURL)
-                    setUploadProgress(0)
+        return new Promise(((resolve, reject) => {
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    // Observe state change events such as progress, pause, and resume
+                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                    setUploadProgress(progress)
+                },
+                (error) => {
+                    console.log(error)
                     setUpLoading(false)
-                })
-            }
-        )
+                    reject(error)
+                },
+                () => {
+                    // Handle successful uploads on complete
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        setUploadProgress(0)
+                        setUpLoading(false)
+                        resolve(downloadURL)
+                    })
+                }
+            )
+        }))
     }
     const handleImageChange = async e => {
         const file = e.target.files[0]

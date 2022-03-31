@@ -4,7 +4,6 @@ import {Context} from '../../context'
 
 const Dashboard = () => {
     const {state} = useContext(Context)
-
     return (
         <ProtectedRoute>
             <ProtectedRoute>

@@ -5,4 +5,3 @@ export function getErrorMessage(e = {}) {
     const {message = 'Seems error occurred.'} = data
     return message
 }
-

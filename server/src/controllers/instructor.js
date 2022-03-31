@@ -2,6 +2,7 @@ const asyncMiddleware = require('../utils/async')
 const ErrorResponse = require('../utils/errorResponse')
 const stripe = require('stripe')(process.env.STRIPE_SECRET)
 const queryString = require('query-string')
+const {Course} = require('../models/Course')
 
 // @desc Make user instructor
 // @route /makeInstructor
@@ -40,4 +41,13 @@ exports.getAccountStatus = asyncMiddleware(async (req, res) => {
     const stripeSeller = `${account.country.toLowerCase()}__${account.id}`
     await user.update({stripe_seller: stripeSeller, role: updatedRole})
     res.json({success: true, user: {...user, stripe_seller: account}})
+})
+
+
+// @desc Get instructor courses
+// @route /myCourses
+// access Private
+exports.getInstructorCourses = asyncMiddleware(async (req, res) => {
+    const courses = await Course.findAll({where: {UserId: req.user.id}})
+    res.json({success: true, courses})
 })
