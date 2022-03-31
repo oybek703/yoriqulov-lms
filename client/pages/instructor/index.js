@@ -25,6 +25,9 @@ const CreateCourse = () => {
         }
 
         getMyCourses()
+        return () => {
+            setLoading(false)
+        }
     }, [])
     return (
         <>
@@ -46,24 +49,28 @@ const CreateCourse = () => {
                     <div className='list-group border-0'>
                         {courses.map(course => (
                             <li
-                                className='list-group-item d-flex border-4
+                                className='list-group-item d-flex border-0 mb-3
                                 align-items-center justify-content-between'
                                 key={uuid()}>
-                                <div>
+                                <div className='d-flex'>
                                     <img src={course.image} alt={course.title}
                                          style={{width: 50, height: 50, marginRight: 10}}
                                          className='rounded-circle'/>
-                                    <Link href={`/instructor/course/${course.id}`}
-                                          className='list-group-item link-primary'>
-                                        <h4>{course.name}</h4>
-                                    </Link>
-                                    <br/>
-                                    <p>0 Lessons</p>
-                                    <p className='text-warning'>
-                                        At least 5 lessons are required for publishing course.
-                                    </p>
+                                    <div>
+                                        <Link href={`/instructor/course/${course.id}`}
+                                              className='list-group-item'>
+                                            <h5 className='btn btn-link'>
+                                                {course.name}
+                                            </h5>
+                                        </Link>
+                                        <br/>
+                                        <span className='small'>0 Lessons</span><br/>
+                                        <i className='text-warning small'>
+                                            At least 5 lessons are required for publishing course.
+                                        </i>
+                                    </div>
                                 </div>
-                                <div>
+                                <div className='small font-monospace btn btn-sm btn-warning'>
                                     <i className="bi bi-x-circle"/>
                                 </div>
                             </li>

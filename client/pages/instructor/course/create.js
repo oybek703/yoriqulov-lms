@@ -39,7 +39,7 @@ const CreateCourse = () => {
                 image
             })
             setLoading(false)
-            await router.push('/user')
+            await router.push('/instructor')
         } catch (e) {
             const message = getErrorMessage(e)
             toast.error(message)

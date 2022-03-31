@@ -1,10 +1,10 @@
 .loader {
-    border: 20px solid #eeeeee;
+    border: 15px solid #eeeeee;
     border-radius: 50%;
     border-top: 16px solid blue;
     border-bottom: 16px solid blue;
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     margin: 10px auto;
     -webkit-animation: spin 0.8s linear infinite;
     animation: spin 0.8s linear infinite;
