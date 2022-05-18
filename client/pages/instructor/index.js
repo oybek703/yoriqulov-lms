@@ -18,7 +18,7 @@ const CreateCourse = () => {
                 setLoading(false)
                 setCourses(courses)
             } catch (e) {
-                setLoading(false)
+                setzLoading(false)
                 const message = getErrorMessage(e)
                 toast.error(message)
             }
@@ -47,31 +47,39 @@ const CreateCourse = () => {
                 <h2 className='text-center'>My Courses</h2>
                 <div className='container'>
                     <div className='list-group border-0'>
-                        {courses.map(course => (
+                        {!courses.length
+                            ? <h6 className='text-black text-center'>You have not created any courses yet.</h6>
+                            : courses.map(course => (
                             <li
                                 className='list-group-item d-flex border-0 mb-3
                                 align-items-center justify-content-between'
                                 key={uuid()}>
-                                <div className='d-flex'>
-                                    <img src={course.image} alt={course.title}
-                                         style={{width: 50, height: 50, marginRight: 10}}
-                                         className='rounded-circle'/>
+                                <div className='d-flex align-items-center'>
+                                    <div><img src={course.image} alt={course.title}
+                                              style={{width: 70, height: 70, marginRight: 20}}
+                                              className='rounded-circle'/></div>
                                     <div>
                                         <Link href={`/instructor/course/${course.id}`}
-                                              className='list-group-item'>
-                                            <h5 className='btn btn-link'>
-                                                {course.name}
-                                            </h5>
-                                        </Link>
+                                              className='list-group-item btn-link'>{course.name}</Link>
                                         <br/>
-                                        <span className='small'>0 Lessons</span><br/>
-                                        <i className='text-warning small'>
-                                            At least 5 lessons are required for publishing course.
-                                        </i>
+                                        <span className='small'>{course.lessons} Lessons</span><br/>
+                                        {
+                                            course['lessons'] < 5
+                                                ? <i className='small text-warning'>
+                                                    At least 5 lessons are required for publishing course.
+                                                </i>
+                                                : course['published'] ?
+                                                <i className='small text-success'>Your course is live in the marketplace</i> :
+                                                <i className='small text-info'>
+                                                    Your course is ready for publishing.
+                                                </i>
+                                        }
                                     </div>
                                 </div>
-                                <div className='small font-monospace btn btn-sm btn-warning'>
-                                    <i className="bi bi-x-circle"/>
+                                <div className={`small d-flex align-items-baseline font-monospace btn btn-sm 
+                                ${course['published'] ? 'btn-success' : 'btn-warning'}`}>
+                                    {course['published'] ? <i className="bi bi-calendar-check"/> :
+                                        <i className="bi bi-patch-exclamation"/>}
                                 </div>
                             </li>
                         ))}

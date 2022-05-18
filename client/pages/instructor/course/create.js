@@ -20,7 +20,8 @@ const CreateCourse = () => {
         name: '',
         description: '',
         price: 9.99,
-        paid: false
+        paid: false,
+        category: ''
     })
     const [preview, setPreview] = useState('')
 
@@ -148,6 +149,11 @@ const CreateCourse = () => {
                                value={formValues['price']}/>
                     </>}
                 </div>
+                <select name="category" onChange={handleChange} value={formValues['category']} className='form-select'>
+                    <option value="frontend">Frontend</option>
+                    <option value="backend">Backend</option>
+                    <option value="mobile">Mobile</option>
+                </select>
                 <div className="my-3 d-flex align-items-center">
                     <label htmlFor="imageFile"
                            className={`btn btn-outline-dark form-label ${upLoading && 'disabled'}`}>

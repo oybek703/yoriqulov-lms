@@ -6,6 +6,7 @@ import TopNav from '../components/TopNav'
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import {Provider} from '../context'
+import Head from 'next/head'
 
 function MyComponent({Component, pageProps}) {
     useEffect(() => {
@@ -13,6 +14,10 @@ function MyComponent({Component, pageProps}) {
     }, [])
     return (
         <Provider>
+            <Head>
+                <title>LMS - Yoriqulov</title>
+                <link rel="shortcut icon" href="/favicon.ico" />
+            </Head>
             <ToastContainer position='top-center' theme='colored'/>
             <TopNav/>
             <Component {...pageProps}/>

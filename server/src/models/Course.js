@@ -30,6 +30,10 @@ const Lesson = sequelize.define('Lesson', {
     free_preview: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    courseId: {
+        type: DataTypes.UUID,
+        allowNull: false
     }
 }, {timestamps: false})
 
@@ -75,17 +79,18 @@ const Course = sequelize.define('Course', {
     paid: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
+    },
+    userId: {
+        type: DataTypes.UUID,
+        allowNull: false
     }
 }, {timestamps: false})
 
-User.hasMany(Course)
-Course.belongsTo(User)
+Course.belongsTo(User, {foreignKey: 'userId', targetKey: 'id'})
+User.hasMany(Course, {foreignKey: 'userId', targetKey: 'id'})
 
-Course.hasMany(Lesson)
-Lesson.belongsTo(Course)
-
-Course.sync().then(() => console.log('Course table created.'))
-Lesson.sync().then(() => console.log('Lesson table created.'))
+Lesson.belongsTo(Course, {foreignKey: 'courseId', targetKey: 'id'})
+Course.hasMany(Lesson, {foreignKey: 'courseId', targetKey: 'id', onDelete: 'CASCADE'})
 
 module.exports = {
     Course,
