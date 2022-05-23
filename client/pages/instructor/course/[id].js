@@ -5,7 +5,7 @@ import {getErrorMessage} from '../../../utils'
 import {toast} from 'react-toastify'
 import Loader from '../../../components/Loader'
 import {v4 as uuid} from 'uuid'
-import ReactMarkdown     from'react-markdown'
+import ReactMarkdown from 'react-markdown'
 
 const Course = () => {
     const router = useRouter()
@@ -68,6 +68,36 @@ const Course = () => {
                                  ? 'Course must have at least 5 lessons to be published.'
                                  : course['published'] ? 'Already published' : 'Publish course'}>
                             <i className='bi bi-calendar-check'/>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button type="button"
+                            className="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#uploadLessonModal">
+                        <span className='px-1 py-3'>Upload lesson </span>
+                        <span className='mt-5'><span className="bi bi-cloud-arrow-up"/></span>
+                    </button>
+                    <div className="modal fade" id="uploadLessonModal" tabIndex="-1"
+                         role="dialog" aria-labelledby="uploadLessonModalTitle" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-centered" role="document">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLongTitle">Add lesson</h5>
+                                    <button type="button" className="close btn small btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    modal body here
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                    </button>
+                                    <button type="button" data-bs-dismiss="modal" className="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,11 @@
-1. Create course and lessons schema - DONE
-2. Write isInstructor middleware - DONE
-3. Save course in the database - DONE
-4. List instructor courses in instructor page - DONE
-5. Show single course view for instructor(navigate from course list) - DONE
-6. Display react-markdown in single course view page - DONE
+TASKS - 23.05.2022
+1. Add lesson modal                                  - DONE
+2. Add form to add lesson modal                      - MUST_DO
+3. Video upload button with input file type          - MUST_DO
+4. Send upload video using form                      - MUST_DO
+5. Upload image to cloud (S3 or other cloud service) - MUST_DO
+6. Remove video from cloud                           - MUST_DO
+7. Remove video from cloud                           - MUST_DO
+8. Only instructor upload and remove video           - MUST_DO
+9. Add lesson finish                                 - MUST_DO
+10.Rendering list items as list                      - MUST_DO
