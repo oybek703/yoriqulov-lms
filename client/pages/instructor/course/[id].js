@@ -6,6 +6,7 @@ import {toast} from 'react-toastify'
 import Loader from '../../../components/Loader'
 import {v4 as uuid} from 'uuid'
 import ReactMarkdown from 'react-markdown'
+import AddLessonForm from '../../../components/AddLessonForm'
 
 const Course = () => {
     const router = useRouter()
@@ -90,12 +91,7 @@ const Course = () => {
                                     </button>
                                 </div>
                                 <div className="modal-body">
-                                    modal body here
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel
-                                    </button>
-                                    <button type="button" data-bs-dismiss="modal" className="btn btn-primary">Save changes</button>
+                                    <AddLessonForm courseId={id}/>
                                 </div>
                             </div>
                         </div>

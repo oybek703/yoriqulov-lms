@@ -57,3 +57,14 @@ exports.getInstructorCourses = asyncMiddleware(async (req, res) => {
     })
     res.json({success: true, courses})
 })
+
+// @desc Add lesson to course
+// @route /lessons/add
+// access Private
+exports.addLessonToCourse = asyncMiddleware(async (req, res) => {
+    const {title, content, file, courseId} = req.body
+    const course = await Course.findOne({where: {id: courseId}})
+    if(!course) throw new ErrorResponse(404, 'Course not found!')
+    console.log(course)
+    res.json({success: true, lesson: {}})
+})

@@ -1,10 +1,10 @@
 TASKS - 23.05.2022
 1. Add lesson modal                                  - DONE
-2. Add form to add lesson modal                      - MUST_DO
-3. Video upload button with input file type          - MUST_DO
-4. Send upload video using form                      - MUST_DO
-5. Upload image to cloud (S3 or other cloud service) - MUST_DO
-6. Remove video from cloud                           - MUST_DO
+2. Add form to add lesson modal                      - DONE
+3. Video upload button with input file type          - DONE
+4. Send upload video using form                      - DONE
+5. Upload image to cloud (S3 or other cloud service) - DONE
+6. Save video to database with upload link           - IN_PROCESS
 7. Remove video from cloud                           - MUST_DO
 8. Only instructor upload and remove video           - MUST_DO
 9. Add lesson finish                                 - MUST_DO
