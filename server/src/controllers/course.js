@@ -9,13 +9,25 @@ const {Lesson} = require('../models/Course')
 // access Private
 exports.createCourse = asyncMiddleware(async (req, res) => {
     const existingCourseTitle = await Course.findOne({where: {slug: slugify(req.body.name)}})
-    if(existingCourseTitle) throw new ErrorResponse(400, 'Title is taken.')
+    if (existingCourseTitle) throw new ErrorResponse(400, 'Title is taken.')
     const newCourse = await Course.create({
         slug: slugify(req.body.name),
         userId: req.user.id,
         ...req.body
     })
     res.json({success: true, newCourse})
+})
+
+// @desc Update and save course
+// @route /course/update
+// access Private
+exports.updateCourse = asyncMiddleware(async (req, res) => {
+    const existingCourseTitle = await Course.findOne({where: {slug: slugify(req.body.name)}})
+    if (existingCourseTitle) throw new ErrorResponse(400, 'Title is taken.')
+    const existingCourse = await Course.findOne({where: {id: req.body.id}})
+    await existingCourse.set({...req.body})
+    await existingCourse.save()
+    res.json({success: true, existingCourse})
 })
 
 // @desc Get single course

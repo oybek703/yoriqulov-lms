@@ -1,11 +1,10 @@
+TASKS - 24.05.2022
+1. Edit course page(in frontend)        - IN_PROCESS
+2. Send update request from frontend    - MUST_DO
+3. Edit course implementation in server - MUST_DO
+4. List lessons in edit course page     - MUST_DO
+5. Draggable items in frontend          - MUST_DO
+6. Drag and drop lessons to reorder     - MUST_DO
+
 TASKS - 23.05.2022
-1. Add lesson modal                                  - DONE
-2. Add form to add lesson modal                      - DONE
-3. Video upload button with input file type          - DONE
-4. Send upload video using form                      - DONE
-5. Upload image to cloud (S3 or other cloud service) - DONE
-6. Save video to database with upload link           - DONE
-7. Remove video from cloud                           - MUST_DO TODO THEN MUST BE IMPLEMENTED IN [EDIT]
-8. Only instructor upload and remove video           - DONE
-9. Add lesson finish                                 - DONE
-10.Rendering list items as list                      - DONE
+7. Remove video from cloud              - MUST_DO TODO THEN MUST BE IMPLEMENTED IN [EDIT]

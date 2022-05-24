@@ -7,7 +7,7 @@ const InstructorRoute = ({children}) => {
     const router = useRouter()
     useEffect(() => {
         if(user && !user.role.includes('Instructor')) router.push('/user/becomeInstructor')
-        else router.push(router.route)
+        else router.push(router.asPath)
     }, [user])
 
     return (

@@ -7,6 +7,7 @@ import Loader from '../../../components/Loader'
 import {v4 as uuid} from 'uuid'
 import ReactMarkdown from 'react-markdown'
 import AddLessonForm from '../../../components/AddLessonForm'
+import Link from 'next/link'
 
 const Course = () => {
     const router = useRouter()
@@ -61,10 +62,13 @@ const Course = () => {
                             </div>
                         </div>
                         <div className='d-flex'>
-                            <div className='small mx-1 d-flex align-items-baseline font-monospace btn btn-sm btn-dark'
-                                 title='Edit'>
-                                <i className="bi bi-pencil "/>
-                            </div>
+                            <Link
+                                href={`/instructor/course/edit/${course.id}`}
+                                title='Edit'>
+                                <a className='small mx-1 d-flex align-items-baseline font-monospace btn btn-sm btn-dark'>
+                                    <i className="bi bi-pencil "/>
+                                </a>
+                            </Link>
                             <div className={`small d-flex align-items-baseline font-monospace btn btn-sm btn-success`}
                                  title={(course.Lessons || []).length < 5
                                      ? 'Course must have at least 5 lessons to be published.'
@@ -109,7 +113,7 @@ const Course = () => {
                         ? <i className='text-black-50 text-center'>This course have no any lessons yet.</i>
                         : <Fragment>
                             <ul className='list-group'>
-                                {course.Lessons && course.Lessons.map((lesson, index) =>
+                                {course.Lessons && course.Lessons.map(lesson =>
                                     (<Fragment key={uuid()}>
                                         <li key={uuid()} className='list-group-item'>
                                             <i className="bi bi-play-circle"/> &nbsp;&nbsp;
