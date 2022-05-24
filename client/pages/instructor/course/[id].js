@@ -36,70 +36,93 @@ const Course = () => {
         <Fragment>
             {loading ? <div className='text-center'>
                 <Loader size='lg'/>
-            </div> : <div className='container card'>
-                <div className='list-group-item d-flex border-0 mb-3 align-items-center justify-content-between'
-                     key={uuid()}>
-                    <div className='d-flex align-items-center'>
-                        <div><img src={course.image} alt={course.title}
-                                  style={{width: 70, height: 70, marginRight: 20}}
-                                  className='rounded-circle'/></div>
-                        <div>
-                            <h5 style={{marginBottom: -5}}>{course.name}</h5>
-                            <span className='small'>{(course.Lessons || []).length} Lessons</span><br/>
-                            {
-                                (course.Lessons || []).length < 5
-                                    ? <i className='small text-warning'>
-                                        At least 5 lessons are required for publishing course.
-                                    </i>
-                                    : course['published'] ?
-                                    <i className='small text-success'>Your course is live in the marketplace</i> :
-                                    <i className='small text-info'>
-                                        Your course is ready for publishing.
-                                    </i>
-                            }
+            </div> : <Fragment>
+                <div className='container card'>
+                    <div className='list-group-item d-flex border-0 mb-3 align-items-center justify-content-between'
+                         key={uuid()}>
+                        <div className='d-flex align-items-center'>
+                            <div><img src={course.image} alt={course.title}
+                                      style={{width: 70, height: 70, marginRight: 20}}
+                                      className='rounded-circle'/></div>
+                            <div>
+                                <h5 style={{marginBottom: -5}}>{course.name}</h5>
+                                <span className='small'>{(course.Lessons || []).length} Lessons</span><br/>
+                                {
+                                    (course.Lessons || []).length < 5
+                                        ? <i className='small text-warning'>
+                                            At least 5 lessons are required for publishing course.
+                                        </i>
+                                        : course['published'] ?
+                                        <i className='small text-success'>Your course is live in the marketplace</i> :
+                                        <i className='small text-info'>
+                                            Your course is ready for publishing.
+                                        </i>
+                                }
+                            </div>
+                        </div>
+                        <div className='d-flex'>
+                            <div className='small mx-1 d-flex align-items-baseline font-monospace btn btn-sm btn-dark'
+                                 title='Edit'>
+                                <i className="bi bi-pencil "/>
+                            </div>
+                            <div className={`small d-flex align-items-baseline font-monospace btn btn-sm btn-success`}
+                                 title={(course.Lessons || []).length < 5
+                                     ? 'Course must have at least 5 lessons to be published.'
+                                     : course['published'] ? 'Already published' : 'Publish course'}>
+                                <i className='bi bi-calendar-check'/>
+                            </div>
                         </div>
                     </div>
-                    <div className='d-flex'>
-                        <div className='small mx-1 d-flex align-items-baseline font-monospace btn btn-sm btn-dark'
-                             title='Edit'>
-                            <i className="bi bi-pencil "/>
-                        </div>
-                        <div className={`small d-flex align-items-baseline font-monospace btn btn-sm btn-success`}
-                             title={(course.Lessons || []).length < 5
-                                 ? 'Course must have at least 5 lessons to be published.'
-                                 : course['published'] ? 'Already published' : 'Publish course'}>
-                            <i className='bi bi-calendar-check'/>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <button type="button"
-                            className="btn btn-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#uploadLessonModal">
-                        <span className='px-1 py-3'>Upload lesson </span>
-                        <span className='mt-5'><span className="bi bi-cloud-arrow-up"/></span>
-                    </button>
-                    <div className="modal fade" id="uploadLessonModal" tabIndex="-1"
-                         role="dialog" aria-labelledby="uploadLessonModalTitle" aria-hidden="true">
-                        <div className="modal-dialog modal-dialog-centered" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="exampleModalLongTitle">Add lesson</h5>
-                                    <button type="button" className="close btn small btn-danger" data-bs-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div className="modal-body">
-                                    <AddLessonForm courseId={id}/>
+                    <div>
+                        <button type="button"
+                                className="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#uploadLessonModal">
+                            <span className='px-1 py-3'>Upload lesson </span>
+                            <span className='mt-5'><span className="bi bi-cloud-arrow-up"/></span>
+                        </button>
+                        <div className="modal fade" id="uploadLessonModal" tabIndex="-1"
+                             role="dialog" aria-labelledby="uploadLessonModalTitle" aria-hidden="true">
+                            <div className="modal-dialog modal-dialog-centered" role="document">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title" id="exampleModalLongTitle">Add lesson</h5>
+                                        <button type="button" className="close btn small btn-danger"
+                                                data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <AddLessonForm courseId={id}/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <hr/>
+                    <ReactMarkdown children={course.description}/>
                 </div>
-                <hr/>
-                <ReactMarkdown children={course.description}/>
-            </div>}
+                <br/>
+                <div className='container card card-body'>
+                    <h4 className='text-center'>Lessons</h4>
+                    {(course.Lessons && course.Lessons.length === 0)
+                        ? <i className='text-black-50 text-center'>This course have no any lessons yet.</i>
+                        : <Fragment>
+                            <ul className='list-group'>
+                                {course.Lessons && course.Lessons.map((lesson, index) =>
+                                    (<Fragment key={uuid()}>
+                                        <li key={uuid()} className='list-group-item'>
+                                            <i className="bi bi-play-circle"/> &nbsp;&nbsp;
+                                            {lesson.title}
+                                        </li>
+                                    </Fragment>)
+                                )}
+                            </ul>
+                        </Fragment>
+                    }
+                </div>
+            </Fragment>
+            }
         </Fragment>
     )
 }

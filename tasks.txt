@@ -4,8 +4,8 @@ TASKS - 23.05.2022
 3. Video upload button with input file type          - DONE
 4. Send upload video using form                      - DONE
 5. Upload image to cloud (S3 or other cloud service) - DONE
-6. Save video to database with upload link           - IN_PROCESS
-7. Remove video from cloud                           - MUST_DO
-8. Only instructor upload and remove video           - MUST_DO
-9. Add lesson finish                                 - MUST_DO
-10.Rendering list items as list                      - MUST_DO
+6. Save video to database with upload link           - DONE
+7. Remove video from cloud                           - MUST_DO TODO THEN MUST BE IMPLEMENTED IN [EDIT]
+8. Only instructor upload and remove video           - DONE
+9. Add lesson finish                                 - DONE
+10.Rendering list items as list                      - DONE

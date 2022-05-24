@@ -4,6 +4,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET)
 const queryString = require('query-string')
 const {Course, Lesson} = require('../models/Course')
 const sequelize = require('sequelize')
+const slugify = require('slugify')
 
 // @desc Make user instructor
 // @route /makeInstructor
@@ -62,9 +63,9 @@ exports.getInstructorCourses = asyncMiddleware(async (req, res) => {
 // @route /lessons/add
 // access Private
 exports.addLessonToCourse = asyncMiddleware(async (req, res) => {
-    const {title, content, file, courseId} = req.body
+    const {title, content, video_link, courseId} = req.body
     const course = await Course.findOne({where: {id: courseId}})
     if(!course) throw new ErrorResponse(404, 'Course not found!')
-    console.log(course)
-    res.json({success: true, lesson: {}})
+    const newLesson = await Lesson.create({title, slug: slugify(title), content, video_link, courseId})
+    res.json({success: true, lesson: newLesson})
 })

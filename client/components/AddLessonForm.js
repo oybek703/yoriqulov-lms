@@ -22,13 +22,17 @@ const AddLessonForm = ({courseId = ''}) => {
             let image
             if (formValues.file) image = await uploadLesson()
             setLoading(false)
-            const {data} = await axiosInstance.post('/api/lessons/add', {
-                ...formValues,
-                courseId,
-                file: image
-            })
-            console.log(data)
+            const {data} = await axiosInstance.post(
+                '/api/lessons/add',
+                {
+                    ...formValues,
+                    courseId,
+                    video_link: image
+                }
+            )
+            const {lesson = {}} = data
             setFormValues({title: '', content: '', file: ''})
+            toast.success(`"${lesson.title}" added successfully!`)
         } catch (e) {
             const message = getErrorMessage(e)
             toast.error(message)
@@ -103,8 +107,8 @@ const AddLessonForm = ({courseId = ''}) => {
                            hidden
                            type="file" required className="custom-file-input" id="customFile"/>
                     <label tabIndex="0"
-                        className="custom-file-label btn-sm btn-success"
-                        htmlFor="customFile">
+                           className="custom-file-label btn-sm btn-success"
+                           htmlFor="customFile">
                         {(formValues.file && formValues.file.name) || 'Choose video file'}</label>
                 </div>
                 <br/>
