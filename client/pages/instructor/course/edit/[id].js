@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {Fragment, useEffect, useState} from 'react'
 import {toast} from 'react-toastify'
 import {getDownloadURL, getStorage, ref, uploadBytesResumable, deleteObject} from 'firebase/storage'
 import {v4 as uuid} from 'uuid'
@@ -54,18 +54,17 @@ const EditCourse = () => {
             [e.target.name]: e.target.value
         })
     }
-
     async function updateImage(file) {
         const firebaseApp = initializeApp(firebaseConfig)
         const storage = getStorage(firebaseApp)
-        console.log(course.image)
-        console.log(file)
-        throw new Error('test')
+        const oldCourseRef = ref(storage, course.image)
         if (!file) return Promise.resolve(course.image)
-        else await deleteObject(course.image)
+        else {
+            setUpLoading(true)
+            await deleteObject(oldCourseRef)
+        }
         const storageRef = ref(storage, `${uuid()}_${file.name.toLowerCase()}`)
         const uploadTask = uploadBytesResumable(storageRef, file)
-        setUpLoading(true)
         return new Promise(((resolve, reject) => {
             uploadTask.on('state_changed',
                 (snapshot) => {
@@ -90,13 +89,11 @@ const EditCourse = () => {
             )
         }))
     }
-
     const handleImageChange = async e => {
         const file = e.target.files[0]
         setFile(file)
         setPreview(window.URL.createObjectURL(e.target.files[0]))
     }
-
     async function getSingleCourse() {
         try {
             setFetchCourseLoading(true)
@@ -110,13 +107,42 @@ const EditCourse = () => {
             toast.error(message)
         }
     }
-
     useEffect(() => {
         if (id) getSingleCourse()
         return () => {
             setFetchCourseLoading(false)
         }
     }, [id])
+    function handleDragStart(e, index) {
+        console.log(e.dataTransfer.setData('ItemIndex', index))
+    }
+    async function handleDrop(e, index) {
+        const movingItemIndex = e.dataTransfer.getData('ItemIndex')
+        const targetIndex = index
+        console.log(course.Lessons)
+        const clonedLessons = course.Lessons
+        const movingItem = clonedLessons[movingItemIndex]
+        clonedLessons.splice(movingItemIndex, 1)
+        clonedLessons.splice(targetIndex, 0, movingItem)
+        try {
+            setUpdateLoading(true)
+            let image
+            if (file) image = await updateImage(file)
+            await axiosInstance.put('/api/course/update', {
+                ...course,
+                ...formValues,
+                price: formValues.paid ? formValues.price : 0,
+                image
+            })
+            setUpdateLoading(false)
+            await getSingleCourse()
+            toast.success('Lessons order updated!')
+        } catch (e) {
+            const message = getErrorMessage(e)
+            toast.error(message)
+            setUpdateLoading(false)
+        }
+    }
 
     return (
         fetchCourseLoading
@@ -234,6 +260,29 @@ const EditCourse = () => {
                         </div>
                     </div>
                 </form>
+                <br/>
+                <div className='container card card-body'>
+                    <h4 className='text-center'>Lessons</h4>
+                    {(course.Lessons && course.Lessons.length === 0)
+                        ? <i className='text-black-50 text-center'>This course have no any lessons yet.</i>
+                        : <Fragment>
+                            <ul className='list-group' onDragOver={event => event.preventDefault()}>
+                                {course.Lessons && course.Lessons.map((lesson, index) =>
+                                    (<Fragment key={uuid()}>
+                                        <li key={uuid()}
+                                            className='list-group-item'
+                                            onDragStart={e => handleDragStart(e, index)}
+                                            onDrop={e => handleDrop(e, index)}
+                                            draggable>
+                                            <i className="bi bi-play-circle"/> &nbsp;&nbsp;
+                                            {lesson.title}
+                                        </li>
+                                    </Fragment>)
+                                )}
+                            </ul>
+                        </Fragment>
+                    }
+                </div>
             </>
     )
 }

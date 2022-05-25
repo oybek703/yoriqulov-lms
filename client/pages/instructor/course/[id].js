@@ -8,31 +8,39 @@ import {v4 as uuid} from 'uuid'
 import ReactMarkdown from 'react-markdown'
 import AddLessonForm from '../../../components/AddLessonForm'
 import Link from 'next/link'
+import 'react-responsive-modal/styles.css'
+import {Modal} from 'react-responsive-modal'
 
 const Course = () => {
     const router = useRouter()
     const {query: {id}} = router
+    const [modalOpen, setModalOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [course, setCourse] = useState([])
-    useEffect(() => {
-        async function getSingleCourse() {
-            try {
-                setLoading(true)
-                const {data: {course}} = await axiosInstance.get(`/api/course/${id}`)
-                setLoading(false)
-                setCourse(course)
-            } catch (e) {
-                setLoading(false)
-                const message = getErrorMessage(e)
-                toast.error(message)
-            }
-        }
+    const myRef = React.useRef(null)
 
-        if (id) getSingleCourse()
-        return () => {
+    async function getSingleCourse() {
+        try {
+            setLoading(true)
+            const {data: {course}} = await axiosInstance.get(`/api/course/${id}`)
             setLoading(false)
+            setCourse(course)
+        } catch (e) {
+            setLoading(false)
+            const message = getErrorMessage(e)
+            toast.error(message)
         }
+    }
+
+    useEffect(() => {
+        if (id) getSingleCourse()
     }, [id])
+
+    async function handleModalClose() {
+        setModalOpen(false)
+        await getSingleCourse()
+    }
+
     return (
         <Fragment>
             {loading ? <div className='text-center'>
@@ -78,13 +86,30 @@ const Course = () => {
                         </div>
                     </div>
                     <div>
-                        <button type="button"
-                                className="btn btn-primary"
-                                data-bs-toggle="modal"
-                                data-bs-target="#uploadLessonModal">
-                            <span className='px-1 py-3'>Upload lesson </span>
-                            <span className='mt-5'><span className="bi bi-cloud-arrow-up"/></span>
-                        </button>
+                        <div>
+                            <button type="button"
+                                    className="btn btn-primary" onClick={setModalOpen.bind(null, true)}>
+                                <span className='px-1 py-3'>Upload lesson </span>
+                                <span className='mt-5'><span className="bi bi-cloud-arrow-up"/></span>
+                            </button>
+                            <Modal closeIcon={
+                                <span className='text-danger'>
+                                    <i className="bi bi-x-circle-fill"/>
+                                </span>
+                            } open={modalOpen}
+                                   onClose={handleModalClose}>
+                                <div className="modal-dialog modal-dialog-centered" role="document">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id="exampleModalLongTitle">Add lesson</h5>
+                                        </div>
+                                        <div className="modal-body">
+                                            <AddLessonForm courseId={id}/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Modal>
+                        </div>
                         <div className="modal fade" id="uploadLessonModal" tabIndex="-1"
                              role="dialog" aria-labelledby="uploadLessonModalTitle" aria-hidden="true">
                             <div className="modal-dialog modal-dialog-centered" role="document">

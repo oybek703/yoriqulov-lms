@@ -13,7 +13,7 @@ const AddLessonForm = ({courseId = ''}) => {
     const [loading, setLoading] = useState(false)
     const [upLoading, setUpLoading] = useState(false)
     const [formValues, setFormValues] = useState({title: '', content: '', file: ''})
-
+    const [fileInputKey, setFileInputKey] = useState(Date.now())
     async function handleSubmit(e) {
         e.preventDefault()
         try {
@@ -33,6 +33,7 @@ const AddLessonForm = ({courseId = ''}) => {
             const {lesson = {}} = data
             setFormValues({title: '', content: '', file: ''})
             toast.success(`"${lesson.title}" added successfully!`)
+            setFileInputKey(Date.now())
         } catch (e) {
             const message = getErrorMessage(e)
             toast.error(message)
@@ -103,13 +104,9 @@ const AddLessonForm = ({courseId = ''}) => {
                 <div className="custom-file bg-gradient d-flex">
                     <input onChange={handleChange}
                            name='file'
+                           key={fileInputKey}
                            disabled={loading || upLoading}
-                           hidden
-                           type="file" required className="custom-file-input" id="customFile"/>
-                    <label tabIndex="0"
-                           className="custom-file-label btn-sm btn-success"
-                           htmlFor="customFile">
-                        {(formValues.file && formValues.file.name) || 'Choose video file'}</label>
+                           type="file" className="custom-file-input" id="customFile"/>
                 </div>
                 <br/>
                 {upLoading && <>

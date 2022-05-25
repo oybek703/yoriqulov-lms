@@ -25,8 +25,10 @@ exports.updateCourse = asyncMiddleware(async (req, res) => {
     const existingCourseTitle = await Course.findOne({where: {slug: slugify(req.body.name)}})
     if (existingCourseTitle) throw new ErrorResponse(400, 'Title is taken.')
     const existingCourse = await Course.findOne({where: {id: req.body.id}})
+    console.log(req.body.Lessons)
     await existingCourse.set({...req.body})
     await existingCourse.save()
+    console.log(existingCourse.Lessons)
     res.json({success: true, existingCourse})
 })
 
