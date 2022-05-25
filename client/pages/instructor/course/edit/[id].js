@@ -121,26 +121,23 @@ const EditCourse = () => {
     function handleDragStart(e, lessonId) {
         e.dataTransfer.setData('movingLessonId', lessonId)
     }
-    async function handleDrop(e, index) {
-        const movingItemIndex = e.dataTransfer.getData('ItemIndex')
-        const targetIndex = index
-        const clonedLessons = [...course.Lessons]
-        const movingItem = clonedLessons[movingItemIndex]
-        clonedLessons.splice(movingItemIndex, 1)
-        clonedLessons.splice(targetIndex, 0, movingItem)
+
+    async function handleDrop(e, targetLessonId) {
+        const movingLessonId = e.dataTransfer.getData('movingLessonId')
         try {
-            setUpdateLoading(true)
-            let image
-            if (file) image = await updateImage(file)
-            await axiosInstance.put('/api/course/update', {
-                ...course,
-                ...formValues,
-                price: formValues.paid ? formValues.price : 0,
-                image
-            })
-            setUpdateLoading(false)
-            await getSingleCourse()
-            toast.success('Lessons order updated!')
+            if (+targetLessonId !== +movingLessonId) {
+                setUpdateLoading(true)
+                await axiosInstance(`/api/course/lessons/reorder`, {
+                    params: {
+                        movingLessonId,
+                        targetLessonId,
+                        courseId: id
+                    }
+                })
+                setUpdateLoading(false)
+                await getSingleCourse()
+                toast.success('Lessons order updated!')
+            }
         } catch (e) {
             const message = getErrorMessage(e)
             toast.error(message)
@@ -271,12 +268,12 @@ const EditCourse = () => {
                         ? <i className='text-black-50 text-center'>This course have no any lessons yet.</i>
                         : <Fragment>
                             <ul className='list-group' onDragOver={event => event.preventDefault()}>
-                                {course.Lessons && course.Lessons.map((lesson, index) =>
+                                {course.Lessons && course.Lessons.map(lesson =>
                                     (<Fragment key={uuid()}>
                                         <li key={uuid()}
                                             className='list-group-item'
-                                            onDragStart={e => handleDragStart(e, index)}
-                                            onDrop={e => handleDrop(e, index)}
+                                            onDragStart={e => handleDragStart(e, lesson.id)}
+                                            onDrop={e => handleDrop(e, lesson.id)}
                                             draggable>
                                             <i className="bi bi-play-circle"/> &nbsp;&nbsp;
                                             {lesson.title}

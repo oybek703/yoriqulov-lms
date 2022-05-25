@@ -26,11 +26,27 @@ exports.updateCourse = asyncMiddleware(async (req, res) => {
     if (existingCourseTitle) throw new ErrorResponse(400, 'Title is taken.')
     const existingCourse = await Course.findOne({
         where: {id: req.body.id},
-        include: [{model: Lesson, attributes: {}}]
+        include: [{model: Lesson, attributes: {}, order: [['id']]}]
     })
     await existingCourse.set({...req.body})
     await existingCourse.save()
     res.json({success: true, existingCourse})
+})
+
+// @desc Change lessons order
+// @route /course/lessons/reorder
+// access Private
+exports.reOrderLessons = asyncMiddleware(async (req, res) => {
+    const {movingLessonId, targetLessonId, courseId} = req.query
+    const rawMovingLesson = await Lesson.findOne({where: {id: movingLessonId}, raw: true})
+    const rawTargetLesson = await Lesson.findOne({where: {id: targetLessonId}, raw: true})
+    const movingLesson = await Lesson.findOne({where: {id: movingLessonId}})
+    const targetLesson = await Lesson.findOne({where: {id: targetLessonId}})
+    await movingLesson.destroy()
+    await targetLesson.destroy()
+    await Lesson.create({...rawTargetLesson, id: movingLessonId, courseId})
+    await Lesson.create({...rawMovingLesson, id: targetLessonId, courseId})
+    res.json({success: true, reordered: true})
 })
 
 // @desc Get single course
@@ -40,7 +56,8 @@ exports.getSingleCourse = asyncMiddleware(async (req, res) => {
     const {slug} = req.params
     const course = await Course.findOne({
         where: {id: slug},
-        include: [{model: Lesson, attributes: {}}]
+        include: [{model: Lesson, as: 'Lessons', attributes: {}}],
+        order: [[Lesson, 'id']]
     })
     res.json({success: true, course})
 })
