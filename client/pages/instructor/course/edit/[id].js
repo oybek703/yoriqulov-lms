@@ -54,6 +54,7 @@ const EditCourse = () => {
             [e.target.name]: e.target.value
         })
     }
+
     async function updateImage(file) {
         const firebaseApp = initializeApp(firebaseConfig)
         const storage = getStorage(firebaseApp)
@@ -89,11 +90,13 @@ const EditCourse = () => {
             )
         }))
     }
+
     const handleImageChange = async e => {
         const file = e.target.files[0]
         setFile(file)
         setPreview(window.URL.createObjectURL(e.target.files[0]))
     }
+
     async function getSingleCourse() {
         try {
             setFetchCourseLoading(true)
@@ -107,20 +110,21 @@ const EditCourse = () => {
             toast.error(message)
         }
     }
+
     useEffect(() => {
         if (id) getSingleCourse()
         return () => {
             setFetchCourseLoading(false)
         }
     }, [id])
-    function handleDragStart(e, index) {
-        console.log(e.dataTransfer.setData('ItemIndex', index))
+
+    function handleDragStart(e, lessonId) {
+        e.dataTransfer.setData('movingLessonId', lessonId)
     }
     async function handleDrop(e, index) {
         const movingItemIndex = e.dataTransfer.getData('ItemIndex')
         const targetIndex = index
-        console.log(course.Lessons)
-        const clonedLessons = course.Lessons
+        const clonedLessons = [...course.Lessons]
         const movingItem = clonedLessons[movingItemIndex]
         clonedLessons.splice(movingItemIndex, 1)
         clonedLessons.splice(targetIndex, 0, movingItem)
