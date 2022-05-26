@@ -1,10 +1,12 @@
-TASKS - 24.05.2022
-1. Edit course page(in frontend)        - DONE
-2. Send update request from frontend    - DONE
-3. Edit course implementation in server - DONE
-4. List lessons in edit course page     - DONE
-5. Draggable items in frontend          - DONE
-6. Drag and drop lessons to reorder     - DONE
+TASKS - 26.05.2022
+1. Delete lesson in frontend page        - IN_PROCESS
+2. Delete lesson in server part          - MUST_DO
+3. Update lesson modal in frontend       - MUST_DO
+4. Update lesson component in frontend   - MUST_DO
+5. Video preview and switch free_preview - MUST_DO
+6. Remove and upload new video in update - MUST_DO
+7. Update lesson request client          - MUST_DO
+8. Update lesson server                  - MUST_DO
 
 TASKS - 23.05.2022
 7. Remove video from cloud              - MUST_DO TODO THEN MUST BE IMPLEMENTED IN [EDIT]
