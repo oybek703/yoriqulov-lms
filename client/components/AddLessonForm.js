@@ -14,6 +14,7 @@ const AddLessonForm = ({courseId = ''}) => {
     const [upLoading, setUpLoading] = useState(false)
     const [formValues, setFormValues] = useState({title: '', content: '', file: ''})
     const [fileInputKey, setFileInputKey] = useState(Date.now())
+
     async function handleSubmit(e) {
         e.preventDefault()
         try {
@@ -32,7 +33,7 @@ const AddLessonForm = ({courseId = ''}) => {
             )
             const {lesson = {}} = data
             setFormValues({title: '', content: '', file: ''})
-            toast.success(`"${lesson.title}" added successfully!`)
+            toast.success(`"${lesson.title}" added successfully!`, {position: 'bottom-right'})
             setFileInputKey(Date.now())
         } catch (e) {
             const message = getErrorMessage(e)
@@ -86,6 +87,7 @@ const AddLessonForm = ({courseId = ''}) => {
                     <input value={formValues['title']}
                            onChange={handleChange}
                            required
+                           disabled={loading || upLoading}
                            type="text"
                            name='title'
                            className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
@@ -94,6 +96,7 @@ const AddLessonForm = ({courseId = ''}) => {
                 <hr/>
                 <div className="form-group">
                     <textarea required
+                              disabled={loading || upLoading}
                               value={formValues['content']}
                               onChange={handleChange}
                               placeholder='Enter lesson content...'

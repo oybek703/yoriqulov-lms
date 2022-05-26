@@ -69,10 +69,10 @@ const CreateCourse = () => {
                                                         At least 5 lessons are required for publishing course.
                                                     </i>
                                                     : course['published'] ?
-                                                    <i className='small text-success'>Your course is live in the
+                                                    <i className='small text-success'>This course is live in the
                                                         marketplace</i> :
                                                     <i className='small text-info'>
-                                                        Your course is ready for publishing.
+                                                        This course is ready for publishing.
                                                     </i>
                                             }
                                         </div>

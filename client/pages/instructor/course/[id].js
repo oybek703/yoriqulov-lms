@@ -116,8 +116,7 @@ const Course = () => {
                                 <div className="modal-content">
                                     <div className="modal-header">
                                         <h5 className="modal-title" id="exampleModalLongTitle">Add lesson</h5>
-                                        <button type="button" className="close btn small btn-danger"
-                                                data-bs-dismiss="modal" aria-label="Close">
+                                        <button type="button" className="close btn small btn-danger" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>

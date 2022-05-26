@@ -136,7 +136,7 @@ const EditCourse = () => {
                 })
                 setUpdateLoading(false)
                 await getSingleCourse()
-                toast.success('Lessons order updated!')
+                toast.success('Lessons order updated!', {position: 'bottom-right'})
             }
         } catch (e) {
             const message = getErrorMessage(e)
@@ -145,6 +145,7 @@ const EditCourse = () => {
         }
     }
 
+    console.log(course)
     return (
         fetchCourseLoading
             ? <div className='text-center'>

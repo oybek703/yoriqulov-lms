@@ -1,0 +1,2 @@
+1. Redirect is not working after session expiration in instructor route
+2. Free and paid is not properly changing after course edit in edit course page

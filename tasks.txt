@@ -4,7 +4,7 @@ TASKS - 24.05.2022
 3. Edit course implementation in server - DONE
 4. List lessons in edit course page     - DONE
 5. Draggable items in frontend          - DONE
-6. Drag and drop lessons to reorder     - IN_PROCESS
+6. Drag and drop lessons to reorder     - DONE
 
 TASKS - 23.05.2022
 7. Remove video from cloud              - MUST_DO TODO THEN MUST BE IMPLEMENTED IN [EDIT]

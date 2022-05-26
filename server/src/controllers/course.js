@@ -2,6 +2,7 @@ const asyncMiddleware = require('../utils/async')
 const {Course} = require('../models/Course')
 const slugify = require('slugify')
 const ErrorResponse = require('../utils/errorResponse')
+const {sequelize} = require('../../config')
 const {Lesson} = require('../models/Course')
 
 // @desc Create and save course
@@ -42,10 +43,12 @@ exports.reOrderLessons = asyncMiddleware(async (req, res) => {
     const rawTargetLesson = await Lesson.findOne({where: {id: targetLessonId}, raw: true})
     const movingLesson = await Lesson.findOne({where: {id: movingLessonId}})
     const targetLesson = await Lesson.findOne({where: {id: targetLessonId}})
-    await movingLesson.destroy()
-    await targetLesson.destroy()
-    await Lesson.create({...rawTargetLesson, id: movingLessonId, courseId})
-    await Lesson.create({...rawMovingLesson, id: targetLessonId, courseId})
+    await sequelize.transaction(async transaction => {
+        await movingLesson.destroy({transaction})
+        await targetLesson.destroy({transaction})
+        await Lesson.create({...rawTargetLesson, id: movingLessonId, courseId}, {transaction})
+        await Lesson.create({...rawMovingLesson, id: targetLessonId, courseId}, {transaction})
+    })
     res.json({success: true, reordered: true})
 })
 
