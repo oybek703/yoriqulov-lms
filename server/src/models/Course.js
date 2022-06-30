@@ -32,7 +32,7 @@ const Lesson = sequelize.define('Lesson', {
         defaultValue: false
     },
     courseId: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         allowNull: false
     }
 }, {timestamps: false})
@@ -81,7 +81,7 @@ const Course = sequelize.define('Course', {
         defaultValue: true
     },
     userId: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         allowNull: false
     }
 }, {timestamps: false})
@@ -91,6 +91,9 @@ User.hasMany(Course, {foreignKey: 'userId', targetKey: 'id'})
 
 Lesson.belongsTo(Course, {foreignKey: 'courseId', targetKey: 'id'})
 Course.hasMany(Lesson, {foreignKey: 'courseId', targetKey: 'id', onDelete: 'CASCADE'})
+
+Course.sync().then(() => console.log('Course table created.'))
+Lesson.sync().then(() => console.log('Lesson table created.'))
 
 module.exports = {
     Course,

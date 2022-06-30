@@ -9,8 +9,9 @@ const Callback = () => {
     const {state: {user}, dispatch} = useContext(Context)
     async function getAccountStatus() {
         try {
-            const {data} = await axiosInstance.post('/api/getAccountStatus')
-            window.localStorage.setItem('user', data)
+            const {data = {}} = await axiosInstance.post('/api/getAccountStatus')
+            const {user} = data
+            window.localStorage.setItem('user', JSON.stringify(user))
             dispatch({type: 'LOGIN'})
             window.location.href = '/instructor'
         } catch (e) {

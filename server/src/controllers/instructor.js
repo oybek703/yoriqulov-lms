@@ -42,7 +42,7 @@ exports.getAccountStatus = asyncMiddleware(async (req, res) => {
     const updatedRole = Array.from(new Set(user.role).add('Instructor'))
     const stripeSeller = `${account.country.toLowerCase()}__${account.id}`
     await user.update({stripe_seller: stripeSeller, role: updatedRole})
-    res.json({success: true, user: {...user, stripe_seller: account}})
+    res.json({success: true, user: {...user['dataValues'], stripe_seller: account}})
 })
 
 
