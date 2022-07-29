@@ -32,7 +32,7 @@ app.get('/api/csrfToken', ((req, res) => {
 app.use(notFoundPage)
 app.use(errorHandler)
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5001
 checkConnection().then(() => {
     app.listen(PORT, () => console.log(`Server is running on port ${PORT}`.blue))
 })

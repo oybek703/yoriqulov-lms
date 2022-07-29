@@ -26,7 +26,7 @@ const TopNav = () => {
         }
     }
     return (
-        <div className='px-2 my-2 border-4 d-flex justify-content-between'>
+        <div className='border-4 d-flex justify-content-between align-items-center pt-2 mx-2'>
             <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 <li className="nav-item mx-2" role="presentation">
                     <Link href='/'>

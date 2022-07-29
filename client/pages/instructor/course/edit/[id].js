@@ -144,8 +144,6 @@ const EditCourse = () => {
             setUpdateLoading(false)
         }
     }
-
-    console.log(course)
     return (
         fetchCourseLoading
             ? <div className='text-center'>
