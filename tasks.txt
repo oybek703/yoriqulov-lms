@@ -10,3 +10,5 @@ TASKS - 26.05.2022
 
 TASKS - 23.05.2022
 7. Remove video from cloud              - MUST_DO TODO THEN MUST BE IMPLEMENTED IN [EDIT]
+
+8. I have added task 8 text.
