@@ -14,3 +14,5 @@ TASKS - 23.05.2022
 8. I have added task 8 text.
     I have started working on delete course.
     I have fixed delete course lesson bug. It is working fine now.
+
+9. Instructor course lesson update is started.
