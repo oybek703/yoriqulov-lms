@@ -12,3 +12,4 @@ TASKS - 23.05.2022
 7. Remove video from cloud              - MUST_DO TODO THEN MUST BE IMPLEMENTED IN [EDIT]
 
 8. I have added task 8 text.
+    I have started working on delete course.
